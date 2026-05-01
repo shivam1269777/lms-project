@@ -1,0 +1,30 @@
+# dependencies
+node_modules/
+
+# env files
+.env
+.env.*
+
+# build output
+dist/
+build/
+
+# logs
+logs/
+*.log
+
+# editor directories and files
+.vscode/
+.idea/
+
+# OS generated files
+.DS_Store
+Thumbs.db
+
+# backend uploads (if any)
+backend/uploads/
+
+# vite cache (if using Vite)
+.vite/
+
+* text=auto eol=lf
