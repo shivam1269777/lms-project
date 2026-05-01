@@ -1,26 +1,42 @@
-import { Resend } from "resend";
+import nodemailer from "nodemailer";
 
-const resend = new Resend(process.env.RESEND_API_KEY);
-
-const sendEmail = async (email, subject, message) => {
+const sendEmail = async function (email, subject, message) {
   try {
-    const { data, error } = await resend.emails.send({
-      from: "LMS Admin <onboarding@resend.dev>",
+    // ✅ Environment variables check
+    if (
+      !process.env.SMTP_HOST ||
+      !process.env.SMTP_PORT ||
+      !process.env.SMTP_USERNAME ||
+      !process.env.SMTP_PASSWORD ||
+      !process.env.SMTP_FROM_EMAIL
+    ) {
+      throw new Error("SMTP environment variables are missing");
+    }
+
+    // ✅ Brevo SMTP Transporter
+    let transporter = nodemailer.createTransport({
+      host: process.env.SMTP_HOST,
+      port: Number(process.env.SMTP_PORT),
+      secure: false, 
+      auth: {
+        user: process.env.SMTP_USERNAME,   
+        pass: process.env.SMTP_PASSWORD,   
+      },
+    });
+
+    // ✅ Email Bhejo
+    await transporter.sendMail({
+      from: `"LMS Admin" <${process.env.SMTP_FROM_EMAIL}>`, 
       to: email,
-      subject: subject,
+      subject,
       html: message,
     });
 
-    if (error) {
-      console.error("EMAIL ERROR:", error);
-      throw new Error(error.message);
-    }
+    console.log("✅ Email sent successfully to:", email);
 
-    console.log("Email sent successfully:", data);
-    return data;
   } catch (error) {
-    console.error("EMAIL ERROR:", error);
-    throw new Error(error.message);
+    console.error("❌ EMAIL ERROR:", error);
+    throw error;
   }
 };
 
