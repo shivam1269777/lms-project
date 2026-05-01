@@ -7,7 +7,8 @@ import crypto from "crypto"
 const cookieOptions={
     maxAge:7*24*60*60*1000,
     httpOnly:true,
-    secure: process.env.NODE_ENV === "production",
+      secure: true,           // ✅ Render pe always true
+  sameSite: "None", 
 }
 
 const register=async (req,res,next)=>{
@@ -114,7 +115,8 @@ const logout=(req,res)=>{
     res.cookie('token',null,{
         secure:true,
         maxAge:0,
-        httpOnly:true
+        httpOnly:true,
+        sameSite: "None",
     });
 
 res.status(200).json({
