@@ -2,7 +2,7 @@ import { Schema,model } from "mongoose";
 import bcrypt from "bcryptjs"
 import jwt from "jsonwebtoken"
 import crypto from "crypto"
-import { status } from "init";
+
 const userSchema= Schema({
     fullName:{
         type:String,
@@ -46,7 +46,7 @@ subscription:{
     status:String
 }
 
-},{timestamp:true})
+},{timestamps:true})
 
 userSchema.pre("save",async function (next){
     if(!this.isModified("password")){
