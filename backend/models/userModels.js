@@ -53,6 +53,7 @@ userSchema.pre("save",async function (next){
         return next();
     }
     this.password= await bcrypt.hash(this.password,10);
+    next();
 })
 
 userSchema.methods={
@@ -65,7 +66,7 @@ userSchema.methods={
         return await bcrypt.compare(plainTextPassword,this.password)
     },
 
-    generatePasswordResetToken:async function(){
+    generatePasswordResetToken: function(){
         const resetToken=crypto.randomBytes(20).toString("hex");
         this.forgotPasswordToken=crypto.createHash("sha256").update(resetToken).digest("hex");
         this.forgotPasswordExpiry=Date.now()+15*60*1000;
